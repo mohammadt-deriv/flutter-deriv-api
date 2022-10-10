@@ -60,6 +60,18 @@ class P2pAdvertListResponse extends P2pAdvertListResponseModel {
   static Future<P2pAdvertListResponse> fetchAdvertList(
     P2pAdvertListRequest request,
   ) async {
+    final P2pAdvertListReceive response = await fetchAdvertListRaw(request);
+
+    return P2pAdvertListResponse.fromJson(response.p2pAdvertList);
+  }
+
+  /// Returns available adverts.
+  ///
+  /// For parameters information refer to [P2pAdvertListRequest].
+  /// Throws a [P2PAdvertException] if API response contains an error
+  static Future<P2pAdvertListReceive> fetchAdvertListRaw(
+    P2pAdvertListRequest request,
+  ) async {
     final P2pAdvertListReceive response = await _api.call(request: request);
 
     checkException(
@@ -68,7 +80,7 @@ class P2pAdvertListResponse extends P2pAdvertListResponseModel {
           P2PAdvertException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pAdvertListResponse.fromJson(response.p2pAdvertList);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.
@@ -169,6 +181,7 @@ enum VisibilityStatusItemEnum {
   /// advertiser_temp_ban.
   advertiserTempBan,
 }
+
 /// P2p advert list model class.
 abstract class P2pAdvertListModel {
   /// Initializes P2p advert list model class .
@@ -219,6 +232,7 @@ class P2pAdvertList extends P2pAdvertListModel {
         list: list ?? this.list,
       );
 }
+
 /// List item model class.
 abstract class ListItemModel {
   /// Initializes List item model class .
@@ -677,6 +691,7 @@ class ListItem extends ListItemModel {
         visibilityStatus: visibilityStatus ?? this.visibilityStatus,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .

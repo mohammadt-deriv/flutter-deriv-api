@@ -71,6 +71,15 @@ class P2pOrderCreateResponse extends P2pOrderCreateResponseModel {
   /// Creates order with parameters specified in [P2pOrderCreateRequest]
   static Future<P2pOrderCreateResponse> create(
       P2pOrderCreateRequest request) async {
+    final P2pOrderCreateReceive response = await createRaw(request);
+
+    return P2pOrderCreateResponse.fromJson(
+        response.p2pOrderCreate, response.subscription);
+  }
+
+  /// Creates order with parameters specified in [P2pOrderCreateRequest]
+  static Future<P2pOrderCreateReceive> createRaw(
+      P2pOrderCreateRequest request) async {
     final P2pOrderCreateReceive response = await _api.call(request: request);
 
     checkException(
@@ -79,14 +88,32 @@ class P2pOrderCreateResponse extends P2pOrderCreateResponseModel {
           P2POrderException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pOrderCreateResponse.fromJson(
-        response.p2pOrderCreate, response.subscription);
+    return response;
   }
 
   /// Creates order and subscribes to the result with parameters specified in [P2pOrderCreateRequest]
   ///
   /// Throws a [P2POrderException] if API response contains an error
   static Stream<P2pOrderCreateResponse?> createAndSubscribe(
+    P2pOrderCreateRequest request, {
+    RequestCompareFunction? comparePredicate,
+  }) =>
+      createAndSubscribeRaw(
+        request,
+        comparePredicate: comparePredicate,
+      ).map(
+        (P2pOrderCreateReceive? response) => response != null
+            ? P2pOrderCreateResponse.fromJson(
+                response.p2pOrderCreate,
+                response.subscription,
+              )
+            : null,
+      );
+
+  /// Creates order and subscribes to the result with parameters specified in [P2pOrderCreateRequest]
+  ///
+  /// Throws a [P2POrderException] if API response contains an error
+  static Stream<P2pOrderCreateReceive?> createAndSubscribeRaw(
     P2pOrderCreateRequest request, {
     RequestCompareFunction? comparePredicate,
   }) =>
@@ -98,12 +125,7 @@ class P2pOrderCreateResponse extends P2pOrderCreateResponseModel {
                 P2POrderException(baseExceptionModel: baseExceptionModel),
           );
 
-          return response is P2pOrderCreateReceive
-              ? P2pOrderCreateResponse.fromJson(
-                  response.p2pOrderCreate,
-                  response.subscription,
-                )
-              : null;
+          return response is P2pOrderCreateReceive ? response : null;
         },
       );
 
@@ -180,6 +202,7 @@ enum StatusEnum {
   /// pending.
   pending,
 }
+
 /// P2p order create model class.
 abstract class P2pOrderCreateModel {
   /// Initializes P2p order create model class .
@@ -472,6 +495,7 @@ class P2pOrderCreate extends P2pOrderCreateModel {
         paymentMethodDetails: paymentMethodDetails ?? this.paymentMethodDetails,
       );
 }
+
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -546,6 +570,7 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -629,6 +654,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -711,6 +737,7 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .
@@ -763,6 +790,7 @@ class DisputeDetails extends DisputeDetailsModel {
         disputerLoginid: disputerLoginid ?? this.disputerLoginid,
       );
 }
+
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -855,6 +883,7 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
+
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .
@@ -930,6 +959,7 @@ class FieldsProperty extends FieldsPropertyModel {
         value: value ?? this.value,
       );
 }
+
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .

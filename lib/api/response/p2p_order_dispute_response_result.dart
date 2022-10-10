@@ -1,8 +1,13 @@
 // ignore_for_file: prefer_single_quotes, unnecessary_import, unused_import
 
 import 'package:equatable/equatable.dart';
+import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
+import 'package:flutter_deriv_api/basic_api/generated/p2p_order_dispute_receive.dart';
+import 'package:flutter_deriv_api/basic_api/generated/p2p_order_dispute_send.dart';
 
 import 'package:flutter_deriv_api/helpers/helpers.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
 
 /// P2p order dispute response model class.
 abstract class P2pOrderDisputeResponseModel {
@@ -43,6 +48,32 @@ class P2pOrderDisputeResponse extends P2pOrderDisputeResponseModel {
     }
 
     return resultMap;
+  }
+
+  static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
+
+  /// Dispute a P2P order.
+  Future<P2pOrderDisputeResponse> disputeOrder(
+    P2pOrderDisputeRequest request,
+  ) async {
+    final P2pOrderDisputeReceive response = await disputeOrderRaw(request);
+
+    return P2pOrderDisputeResponse.fromJson(response.p2pOrderDispute);
+  }
+
+  /// Dispute a P2P order.
+  Future<P2pOrderDisputeReceive> disputeOrderRaw(
+    P2pOrderDisputeRequest request,
+  ) async {
+    final P2pOrderDisputeReceive response = await _api.call(request: request);
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          P2POrderException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.
@@ -115,6 +146,7 @@ enum StatusEnum {
   /// dispute-completed.
   disputeCompleted,
 }
+
 /// P2p order dispute model class.
 abstract class P2pOrderDisputeModel {
   /// Initializes P2p order dispute model class .
@@ -378,6 +410,7 @@ class P2pOrderDispute extends P2pOrderDisputeModel {
         type: type ?? this.type,
       );
 }
+
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -452,6 +485,7 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -535,6 +569,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -617,6 +652,7 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .

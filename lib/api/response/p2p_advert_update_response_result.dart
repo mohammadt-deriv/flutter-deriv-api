@@ -60,6 +60,18 @@ class P2pAdvertUpdateResponse extends P2pAdvertUpdateResponseModel {
   static Future<P2pAdvertUpdateResponse> updateAdvert(
     P2pAdvertUpdateRequest request,
   ) async {
+    final P2pAdvertUpdateReceive response = await updateAdvertRaw(request);
+
+    return P2pAdvertUpdateResponse.fromJson(response.p2pAdvertUpdate);
+  }
+
+  /// Updates a P2P (peer to peer) advert. Can only be used by the advertiser.
+  ///
+  /// For parameters information refer to [P2pAdvertUpdateRequest].
+  /// Throws a [P2PAdvertException] if API response contains an error
+  static Future<P2pAdvertUpdateReceive> updateAdvertRaw(
+    P2pAdvertUpdateRequest request,
+  ) async {
     final P2pAdvertUpdateReceive response = await _api.call(request: request);
 
     checkException(
@@ -68,7 +80,7 @@ class P2pAdvertUpdateResponse extends P2pAdvertUpdateResponseModel {
           P2PAdvertException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pAdvertUpdateResponse.fromJson(response.p2pAdvertUpdate);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.
@@ -206,6 +218,7 @@ enum VisibilityStatusItemEnum {
   /// advertiser_temp_ban.
   advertiserTempBan,
 }
+
 /// P2p advert update model class.
 abstract class P2pAdvertUpdateModel {
   /// Initializes P2p advert update model class .
@@ -703,6 +716,7 @@ class P2pAdvertUpdate extends P2pAdvertUpdateModel {
         visibilityStatus: visibilityStatus ?? this.visibilityStatus,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -836,6 +850,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         totalCompletionRate: totalCompletionRate ?? this.totalCompletionRate,
       );
 }
+
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -928,6 +943,7 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
+
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .

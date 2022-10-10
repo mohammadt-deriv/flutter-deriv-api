@@ -8,7 +8,9 @@ import 'package:flutter_deriv_api/api/response/p2p_advert_update_response_result
 import 'package:flutter_deriv_api/api/response/p2p_order_create_response_result.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_advert_info_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_advert_info_send.dart';
+import 'package:flutter_deriv_api/basic_api/generated/p2p_advert_update_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_advert_update_send.dart';
+import 'package:flutter_deriv_api/basic_api/generated/p2p_order_create_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_create_send.dart';
 import 'package:flutter_deriv_api/helpers/helpers.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
@@ -77,6 +79,19 @@ class P2pAdvertInfoResponse extends P2pAdvertInfoResponseModel {
   static Future<P2pAdvertInfoResponse> fetchAdvert(
     P2pAdvertInfoRequest request,
   ) async {
+    final P2pAdvertInfoReceive response = await fetchAdvertRaw(request);
+
+    return P2pAdvertInfoResponse.fromJson(
+        response.p2pAdvertInfo, response.subscription);
+  }
+
+  /// Retrieves information about a P2P (peer to peer) advert.
+  ///
+  /// For parameters information refer to [P2pAdvertInfoRequest].
+  /// Throws a [P2PAdvertException] if API response contains an error
+  static Future<P2pAdvertInfoReceive> fetchAdvertRaw(
+    P2pAdvertInfoRequest request,
+  ) async {
     final P2pAdvertInfoReceive response = await _api.call(request: request);
 
     checkException(
@@ -85,8 +100,7 @@ class P2pAdvertInfoResponse extends P2pAdvertInfoResponseModel {
           P2PAdvertException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pAdvertInfoResponse.fromJson(
-        response.p2pAdvertInfo, response.subscription);
+    return response;
   }
 
   /// Updates a P2P (peer to peer) advert. Can only be used by the advertiser.
@@ -106,20 +120,54 @@ class P2pAdvertInfoResponse extends P2pAdvertInfoResponseModel {
         ),
       );
 
+  /// Updates a P2P (peer to peer) advert. Can only be used by the advertiser.
+  ///
+  /// [delete] to permanently delete the advert
+  /// [isActive] to activate or deactivate the advert
+  /// Throws a [P2PAdvertException] if API response contains an error
+  Future<P2pAdvertUpdateReceive> updateRaw({
+    bool? delete,
+    bool? isActive,
+  }) =>
+      P2pAdvertUpdateResponse.updateAdvertRaw(
+        P2pAdvertUpdateRequest(
+          id: p2pAdvertInfo?.id,
+          delete: delete ?? false,
+          isActive: isActive ?? p2pAdvertInfo?.isActive,
+        ),
+      );
+
   /// Deletes permanently a P2P (peer to peer) advert. Can only be used by the advertiser.
   ///
   /// Throws a [P2PAdvertException] if API response contains an error
   Future<P2pAdvertUpdateResponse> delete() => update(delete: true);
+
+  /// Deletes permanently a P2P (peer to peer) advert. Can only be used by the advertiser.
+  ///
+  /// Throws a [P2PAdvertException] if API response contains an error
+  Future<P2pAdvertUpdateReceive> deleteRaw() => updateRaw(delete: true);
 
   /// Activates a P2P (peer to peer) advert. Can only be used by the advertiser.
   ///
   /// Throws a [P2PAdvertException] if API response contains an error
   Future<P2pAdvertUpdateResponse> activate() async => update(isActive: true);
 
+  /// Activates a P2P (peer to peer) advert. Can only be used by the advertiser.
+  ///
+  /// Throws a [P2PAdvertException] if API response contains an error
+  Future<P2pAdvertUpdateReceive> activateRaw() async =>
+      updateRaw(isActive: true);
+
   /// Deactivates a P2P (peer to peer) advert. Can only be used by the advertiser.
   ///
   /// Throws a [P2PAdvertException] if API response contains an error
   Future<P2pAdvertUpdateResponse> deactivate() async => update(isActive: false);
+
+  /// Deactivates a P2P (peer to peer) advert. Can only be used by the advertiser.
+  ///
+  /// Throws a [P2PAdvertException] if API response contains an error
+  Future<P2pAdvertUpdateReceive> deactivateRaw() async =>
+      updateRaw(isActive: false);
 
   /// Creates order on this advert.
   ///
@@ -133,6 +181,27 @@ class P2pAdvertInfoResponse extends P2pAdvertInfoResponseModel {
     String? paymentInfo,
   }) =>
       P2pOrderCreateResponse.create(
+        P2pOrderCreateRequest(
+          advertId: p2pAdvertInfo?.id,
+          amount: amount,
+          contactInfo: contactInfo,
+          paymentInfo: paymentInfo,
+          paymentMethodIds: const <int>[],
+        ),
+      );
+
+  /// Creates order on this advert.
+  ///
+  /// [amount] is the amount of currency to be bought or sold.
+  /// [contactInfo] is seller contact information. Only applicable for [OrderType.sell].
+  /// [paymentInfo] is payment instructions. Only applicable for [OrderType.sell].
+  /// Throws [P2POrderException] if API response contains an error.
+  Future<P2pOrderCreateReceive> createOrderRaw({
+    required double amount,
+    String? contactInfo,
+    String? paymentInfo,
+  }) =>
+      P2pOrderCreateResponse.createRaw(
         P2pOrderCreateRequest(
           advertId: p2pAdvertInfo?.id,
           amount: amount,
@@ -279,6 +348,7 @@ enum VisibilityStatusItemEnum {
   /// advertiser_temp_ban.
   advertiserTempBan,
 }
+
 /// P2p advert info model class.
 abstract class P2pAdvertInfoModel {
   /// Initializes P2p advert info model class .
@@ -775,6 +845,7 @@ class P2pAdvertInfo extends P2pAdvertInfoModel {
         visibilityStatus: visibilityStatus ?? this.visibilityStatus,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -938,6 +1009,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         totalCompletionRate: totalCompletionRate ?? this.totalCompletionRate,
       );
 }
+
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -1030,6 +1102,7 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
+
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .
@@ -1104,6 +1177,7 @@ class FieldsProperty extends FieldsPropertyModel {
         value: value ?? this.value,
       );
 }
+
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .

@@ -60,6 +60,18 @@ class P2pAdvertCreateResponse extends P2pAdvertCreateResponseModel {
   static Future<P2pAdvertCreateResponse> createAdvert(
     P2pAdvertCreateRequest request,
   ) async {
+    final P2pAdvertCreateReceive response = await createAdvertRaw(request);
+
+    return P2pAdvertCreateResponse.fromJson(response.p2pAdvertCreate);
+  }
+
+  /// Creates a P2P (peer to peer) advert. Can only be used by an approved P2P advertiser.
+  ///
+  /// For parameters information refer to [P2pAdvertCreateRequest].
+  /// Throws a [P2PAdvertException] if API response contains an error
+  static Future<P2pAdvertCreateReceive> createAdvertRaw(
+    P2pAdvertCreateRequest request,
+  ) async {
     final P2pAdvertCreateReceive response = await _api.call(request: request);
 
     checkException(
@@ -68,7 +80,7 @@ class P2pAdvertCreateResponse extends P2pAdvertCreateResponseModel {
           P2PAdvertException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pAdvertCreateResponse.fromJson(response.p2pAdvertCreate);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.
@@ -206,6 +218,7 @@ enum VisibilityStatusItemEnum {
   /// advertiser_temp_ban.
   advertiserTempBan,
 }
+
 /// P2p advert create model class.
 abstract class P2pAdvertCreateModel {
   /// Initializes P2p advert create model class .
@@ -676,6 +689,7 @@ class P2pAdvertCreate extends P2pAdvertCreateModel {
         visibilityStatus: visibilityStatus ?? this.visibilityStatus,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -809,6 +823,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         totalCompletionRate: totalCompletionRate ?? this.totalCompletionRate,
       );
 }
+
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -901,6 +916,7 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
+
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .

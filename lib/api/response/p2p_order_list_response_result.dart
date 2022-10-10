@@ -76,6 +76,17 @@ class P2pOrderListResponse extends P2pOrderListResponseModel {
   static Future<P2pOrderListResponse> fetchOrderList([
     P2pOrderListRequest? request,
   ]) async {
+    final P2pOrderListReceive response =
+        await fetchOrderListRaw(request ?? const P2pOrderListRequest());
+
+    return P2pOrderListResponse.fromJson(
+        response.p2pOrderList, response.subscription);
+  }
+
+  /// Gets the list of [P2POrder] with parameters specified in [P2pOrderListRequest]
+  static Future<P2pOrderListReceive> fetchOrderListRaw([
+    P2pOrderListRequest? request,
+  ]) async {
     final P2pOrderListReceive response = await _api.call(
       request: request ?? const P2pOrderListRequest(),
     );
@@ -86,12 +97,28 @@ class P2pOrderListResponse extends P2pOrderListResponseModel {
           P2POrderException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pOrderListResponse.fromJson(
-        response.p2pOrderList, response.subscription);
+    return response;
   }
 
   /// Subscribes to the list of [P2POrder] with parameters specified in [P2pOrderListRequest]
   static Stream<P2pOrderListResponse?> subscribeOrderList({
+    P2pOrderListRequest? request,
+    RequestCompareFunction? comparePredicate,
+  }) =>
+      subscribeOrderListRaw(
+        request: request,
+        comparePredicate: comparePredicate,
+      ).map(
+        (P2pOrderListReceive? response) => response != null
+            ? P2pOrderListResponse.fromJson(
+                response.p2pOrderList,
+                response.subscription,
+              )
+            : null,
+      );
+
+  /// Subscribes to the list of [P2POrder] with parameters specified in [P2pOrderListRequest]
+  static Stream<P2pOrderListReceive?> subscribeOrderListRaw({
     P2pOrderListRequest? request,
     RequestCompareFunction? comparePredicate,
   }) =>
@@ -100,7 +127,7 @@ class P2pOrderListResponse extends P2pOrderListResponseModel {
         request: request ?? const P2pOrderListRequest(),
         comparePredicate: comparePredicate,
       )!
-          .map<P2pOrderListResponse?>(
+          .map<P2pOrderListReceive?>(
         (Response response) {
           checkException(
             response: response,
@@ -108,12 +135,7 @@ class P2pOrderListResponse extends P2pOrderListResponseModel {
                 P2POrderException(baseExceptionModel: baseExceptionModel),
           );
 
-          return response is P2pOrderListReceive
-              ? P2pOrderListResponse.fromJson(
-                  response.p2pOrderList,
-                  response.subscription,
-                )
-              : null;
+          return response is P2pOrderListReceive ? response : null;
         },
       );
 
@@ -215,6 +237,7 @@ enum StatusEnum {
   /// dispute-completed.
   disputeCompleted,
 }
+
 /// P2p order list model class.
 abstract class P2pOrderListModel {
   /// Initializes P2p order list model class .
@@ -265,6 +288,7 @@ class P2pOrderList extends P2pOrderListModel {
         list: list ?? this.list,
       );
 }
+
 /// List item model class.
 abstract class ListItemModel {
   /// Initializes List item model class .
@@ -586,6 +610,7 @@ class ListItem extends ListItemModel {
         reviewDetails: reviewDetails ?? this.reviewDetails,
       );
 }
+
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -660,6 +685,7 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -753,6 +779,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .
@@ -805,6 +832,7 @@ class DisputeDetails extends DisputeDetailsModel {
         disputerLoginid: disputerLoginid ?? this.disputerLoginid,
       );
 }
+
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -897,6 +925,7 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Review details model class.
 abstract class ReviewDetailsModel {
   /// Initializes Review details model class .
@@ -959,6 +988,7 @@ class ReviewDetails extends ReviewDetailsModel {
         recommended: recommended ?? this.recommended,
       );
 }
+
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .

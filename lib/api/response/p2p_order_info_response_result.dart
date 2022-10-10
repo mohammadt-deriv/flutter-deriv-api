@@ -84,6 +84,17 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   /// Throws a [P2POrderException] if API response contains an error
   static Future<P2pOrderInfoResponse> fetchOrder(
       P2pOrderInfoRequest request) async {
+    final P2pOrderInfoReceive response = await fetchOrderRaw(request);
+
+    return P2pOrderInfoResponse.fromJson(
+        response.p2pOrderInfo, response.subscription);
+  }
+
+  /// Gets order with parameters specified in [P2pOrderInfoRequest]
+  ///
+  /// Throws a [P2POrderException] if API response contains an error
+  static Future<P2pOrderInfoReceive> fetchOrderRaw(
+      P2pOrderInfoRequest request) async {
     final P2pOrderInfoReceive response = await _api.call(request: request);
 
     checkException(
@@ -92,8 +103,7 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
           P2POrderException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pOrderInfoResponse.fromJson(
-        response.p2pOrderInfo, response.subscription);
+    return response;
   }
 
   /// Subscribes to this order
@@ -105,6 +115,15 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
         comparePredicate: comparePredicate,
       );
 
+  /// Subscribes to this order
+  Stream<P2pOrderInfoReceive?> subscribeRaw({
+    RequestCompareFunction? comparePredicate,
+  }) =>
+      subscribeOrderRaw(
+        P2pOrderInfoRequest(id: p2pOrderInfo?.id),
+        comparePredicate: comparePredicate,
+      );
+
   /// Subscribes to order with parameters specified in [P2pOrderInfoRequest]
   ///
   /// Throws a [P2POrderException] if API response contains an error
@@ -112,9 +131,28 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
     P2pOrderInfoRequest request, {
     RequestCompareFunction? comparePredicate,
   }) =>
+      subscribeOrderRaw(
+        request,
+        comparePredicate: comparePredicate,
+      ).map(
+        (P2pOrderInfoReceive? response) => response != null
+            ? P2pOrderInfoResponse.fromJson(
+                response.p2pOrderInfo,
+                response.subscription,
+              )
+            : null,
+      );
+
+  /// Subscribes to order with parameters specified in [P2pOrderInfoRequest]
+  ///
+  /// Throws a [P2POrderException] if API response contains an error
+  static Stream<P2pOrderInfoReceive?> subscribeOrderRaw(
+    P2pOrderInfoRequest request, {
+    RequestCompareFunction? comparePredicate,
+  }) =>
       _api
           .subscribe(request: request, comparePredicate: comparePredicate)!
-          .map<P2pOrderInfoResponse?>(
+          .map<P2pOrderInfoReceive?>(
         (Response response) {
           checkException(
             response: response,
@@ -122,12 +160,7 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
                 P2POrderException(baseExceptionModel: baseExceptionModel),
           );
 
-          return response is P2pOrderInfoReceive
-              ? P2pOrderInfoResponse.fromJson(
-                  response.p2pOrderInfo,
-                  response.subscription,
-                )
-              : null;
+          return response is P2pOrderInfoReceive ? response : null;
         },
       );
 
@@ -172,6 +205,15 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
   Future<P2pOrderCancelResponse> cancel() async {
+    final P2pOrderCancelReceive response = await cancelRaw();
+    return P2pOrderCancelResponse.fromJson(response.p2pOrderCancel);
+  }
+
+  /// Cancels this order
+  ///
+  /// Returns an order with updated status if successful.
+  /// Throws a [P2POrderException] if API response contains an error
+  Future<P2pOrderCancelReceive> cancelRaw() async {
     final P2pOrderCancelReceive response =
         await _api.call(request: P2pOrderCancelRequest(id: p2pOrderInfo?.id));
 
@@ -181,7 +223,7 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
           P2POrderException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pOrderCancelResponse.fromJson(response.p2pOrderCancel);
+    return response;
   }
 
   /// Confirms this order
@@ -189,6 +231,16 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
   Future<P2pOrderConfirmResponse> confirm() async {
+    final P2pOrderConfirmReceive response = await confirmRaw();
+
+    return P2pOrderConfirmResponse.fromJson(response.p2pOrderConfirm);
+  }
+
+  /// Confirms this order
+  ///
+  /// Returns an order with updated status if successful.
+  /// Throws a [P2POrderException] if API response contains an error
+  Future<P2pOrderConfirmReceive> confirmRaw() async {
     final P2pOrderConfirmReceive response =
         await _api.call(request: P2pOrderConfirmRequest(id: p2pOrderInfo?.id));
 
@@ -198,7 +250,7 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
           P2POrderException(baseExceptionModel: baseExceptionModel),
     );
 
-    return P2pOrderConfirmResponse.fromJson(response.p2pOrderConfirm);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.
@@ -310,6 +362,7 @@ enum StatusEnum {
   /// dispute-completed.
   disputeCompleted,
 }
+
 /// P2p order info model class.
 abstract class P2pOrderInfoModel {
   /// Initializes P2p order info model class .
@@ -626,6 +679,7 @@ class P2pOrderInfo extends P2pOrderInfoModel {
         reviewDetails: reviewDetails ?? this.reviewDetails,
       );
 }
+
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -700,6 +754,7 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
+
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -793,6 +848,7 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -885,6 +941,7 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
+
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .
@@ -937,6 +994,7 @@ class DisputeDetails extends DisputeDetailsModel {
         disputerLoginid: disputerLoginid ?? this.disputerLoginid,
       );
 }
+
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -1029,6 +1087,7 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
+
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .
@@ -1104,6 +1163,7 @@ class FieldsProperty extends FieldsPropertyModel {
         value: value ?? this.value,
       );
 }
+
 /// Review details model class.
 abstract class ReviewDetailsModel {
   /// Initializes Review details model class .
@@ -1166,6 +1226,7 @@ class ReviewDetails extends ReviewDetailsModel {
         recommended: recommended ?? this.recommended,
       );
 }
+
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .
