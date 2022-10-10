@@ -2,6 +2,7 @@
 
 import 'package:equatable/equatable.dart';
 
+
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/api/models/base_exception_model.dart';
 import 'package:flutter_deriv_api/api/response/forget_all_response_result.dart';
@@ -237,7 +238,6 @@ enum StatusEnum {
   /// dispute-completed.
   disputeCompleted,
 }
-
 /// P2p order list model class.
 abstract class P2pOrderListModel {
   /// Initializes P2p order list model class .
@@ -288,7 +288,6 @@ class P2pOrderList extends P2pOrderListModel {
         list: list ?? this.list,
       );
 }
-
 /// List item model class.
 abstract class ListItemModel {
   /// Initializes List item model class .
@@ -610,7 +609,6 @@ class ListItem extends ListItemModel {
         reviewDetails: reviewDetails ?? this.reviewDetails,
       );
 }
-
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -685,7 +683,6 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
-
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -779,7 +776,6 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
-
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .
@@ -832,7 +828,6 @@ class DisputeDetails extends DisputeDetailsModel {
         disputerLoginid: disputerLoginid ?? this.disputerLoginid,
       );
 }
-
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -925,7 +920,6 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
-
 /// Review details model class.
 abstract class ReviewDetailsModel {
   /// Initializes Review details model class .
@@ -988,7 +982,6 @@ class ReviewDetails extends ReviewDetailsModel {
         recommended: recommended ?? this.recommended,
       );
 }
-
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .

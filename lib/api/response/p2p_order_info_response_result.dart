@@ -362,7 +362,6 @@ enum StatusEnum {
   /// dispute-completed.
   disputeCompleted,
 }
-
 /// P2p order info model class.
 abstract class P2pOrderInfoModel {
   /// Initializes P2p order info model class .
@@ -679,7 +678,6 @@ class P2pOrderInfo extends P2pOrderInfoModel {
         reviewDetails: reviewDetails ?? this.reviewDetails,
       );
 }
-
 /// Advert details model class.
 abstract class AdvertDetailsModel {
   /// Initializes Advert details model class .
@@ -754,7 +752,6 @@ class AdvertDetails extends AdvertDetailsModel {
         paymentMethod: paymentMethod ?? this.paymentMethod,
       );
 }
-
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -848,7 +845,6 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
-
 /// Client details model class.
 abstract class ClientDetailsModel {
   /// Initializes Client details model class .
@@ -941,7 +937,6 @@ class ClientDetails extends ClientDetailsModel {
         lastName: lastName ?? this.lastName,
       );
 }
-
 /// Dispute details model class.
 abstract class DisputeDetailsModel {
   /// Initializes Dispute details model class .
@@ -994,7 +989,6 @@ class DisputeDetails extends DisputeDetailsModel {
         disputerLoginid: disputerLoginid ?? this.disputerLoginid,
       );
 }
-
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -1087,7 +1081,6 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
-
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .
@@ -1163,7 +1156,6 @@ class FieldsProperty extends FieldsPropertyModel {
         value: value ?? this.value,
       );
 }
-
 /// Review details model class.
 abstract class ReviewDetailsModel {
   /// Initializes Review details model class .
@@ -1226,7 +1218,6 @@ class ReviewDetails extends ReviewDetailsModel {
         recommended: recommended ?? this.recommended,
       );
 }
-
 /// Subscription model class.
 abstract class SubscriptionModel {
   /// Initializes Subscription model class .

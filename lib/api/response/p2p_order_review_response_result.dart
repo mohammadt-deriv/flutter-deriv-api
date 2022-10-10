@@ -1,14 +1,14 @@
 // ignore_for_file: prefer_single_quotes, unnecessary_import, unused_import
 
 import 'package:equatable/equatable.dart';
+
+
+import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_review_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_review_send.dart';
-
 import 'package:flutter_deriv_api/helpers/helpers.dart';
 import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
 import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
-
-import '../exceptions/exceptions.dart';
 
 /// P2p order review response model class.
 abstract class P2pOrderReviewResponseModel {
@@ -85,7 +85,6 @@ class P2pOrderReviewResponse extends P2pOrderReviewResponseModel {
         p2pOrderReview: p2pOrderReview ?? this.p2pOrderReview,
       );
 }
-
 /// P2p order review model class.
 abstract class P2pOrderReviewModel {
   /// Initializes P2p order review model class .

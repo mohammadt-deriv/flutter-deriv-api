@@ -218,7 +218,6 @@ enum VisibilityStatusItemEnum {
   /// advertiser_temp_ban.
   advertiserTempBan,
 }
-
 /// P2p advert create model class.
 abstract class P2pAdvertCreateModel {
   /// Initializes P2p advert create model class .
@@ -689,7 +688,6 @@ class P2pAdvertCreate extends P2pAdvertCreateModel {
         visibilityStatus: visibilityStatus ?? this.visibilityStatus,
       );
 }
-
 /// Advertiser details model class.
 abstract class AdvertiserDetailsModel {
   /// Initializes Advertiser details model class .
@@ -823,7 +821,6 @@ class AdvertiserDetails extends AdvertiserDetailsModel {
         totalCompletionRate: totalCompletionRate ?? this.totalCompletionRate,
       );
 }
-
 /// Payment method details property model class.
 abstract class PaymentMethodDetailsPropertyModel {
   /// Initializes Payment method details property model class .
@@ -916,7 +913,6 @@ class PaymentMethodDetailsProperty extends PaymentMethodDetailsPropertyModel {
         displayName: displayName ?? this.displayName,
       );
 }
-
 /// Fields property model class.
 abstract class FieldsPropertyModel {
   /// Initializes Fields property model class .

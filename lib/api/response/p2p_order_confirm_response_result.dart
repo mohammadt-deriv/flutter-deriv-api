@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_single_quotes, unnecessary_import, unused_import
 
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_confirm_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_confirm_send.dart';
@@ -98,7 +99,6 @@ enum StatusEnum {
   /// completed.
   completed,
 }
-
 /// P2p order confirm model class.
 abstract class P2pOrderConfirmModel {
   /// Initializes P2p order confirm model class .

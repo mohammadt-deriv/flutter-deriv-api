@@ -91,7 +91,6 @@ class P2pAdvertiserUpdateResponse extends P2pAdvertiserUpdateResponseModel {
         p2pAdvertiserUpdate: p2pAdvertiserUpdate ?? this.p2pAdvertiserUpdate,
       );
 }
-
 /// P2p advertiser update model class.
 abstract class P2pAdvertiserUpdateModel {
   /// Initializes P2p advertiser update model class .

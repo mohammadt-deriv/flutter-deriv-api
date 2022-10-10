@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_single_quotes, unnecessary_import, unused_import
 
 import 'package:equatable/equatable.dart';
+
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_cancel_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_cancel_send.dart';
@@ -94,7 +95,6 @@ enum StatusEnum {
   /// cancelled.
   cancelled,
 }
-
 /// P2p order cancel model class.
 abstract class P2pOrderCancelModel {
   /// Initializes P2p order cancel model class .
