@@ -55,6 +55,17 @@ class TimeResponse extends TimeResponseModel {
   static Future<TimeResponse> fetchTime([
     TimeRequest? request,
   ]) async {
+    final TimeReceive response = await fetchTimeRaw();
+
+    return TimeResponse.fromJson(response.time);
+  }
+
+  /// Gets back-end server epoch time.
+  ///
+  /// Throws a [ServerTimeException] if API response contains an error
+  static Future<TimeReceive> fetchTimeRaw([
+    TimeRequest? request,
+  ]) async {
     final TimeReceive response = await _api.call(
       request: request ?? const TimeRequest(),
     );
@@ -65,7 +76,7 @@ class TimeResponse extends TimeResponseModel {
           ServerTimeException(),
     );
 
-    return TimeResponse.fromJson(response.time);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.

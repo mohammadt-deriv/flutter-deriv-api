@@ -55,6 +55,19 @@ class GetAccountStatusResponse extends GetAccountStatusResponseModel {
 
   /// Gets the account's status
   static Future<GetAccountStatusResponse> fetchAccountStatus() async {
+    final GetAccountStatusReceive response = await fetchAccountStatusRaw();
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          AccountStatusException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return GetAccountStatusResponse.fromJson(response.getAccountStatus);
+  }
+
+  /// Gets the account's status
+  static Future<GetAccountStatusReceive> fetchAccountStatusRaw() async {
     final GetAccountStatusReceive response = await _api.call(
       request: const GetAccountStatusRequest(),
     );
@@ -65,7 +78,7 @@ class GetAccountStatusResponse extends GetAccountStatusResponseModel {
           AccountStatusException(baseExceptionModel: baseExceptionModel),
     );
 
-    return GetAccountStatusResponse.fromJson(response.getAccountStatus);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.

@@ -143,13 +143,11 @@ class P2pOrderListResponse extends P2pOrderListResponseModel {
   /// Unsubscribes from order list subscription.
   ///
   /// Throws a [P2POrderException] if API response contains an error
-  Future<ForgetResponse?> unsubscribeOrderList() async {
-    if (subscription == null) {
-      return null;
-    }
-
+  static Future<ForgetResponse?> unsubscribeOrderList(
+    String subscriptionId,
+  ) async {
     final ForgetReceive response =
-        await _api.unsubscribe(subscriptionId: subscription!.id);
+        await _api.unsubscribe(subscriptionId: subscriptionId);
 
     checkException(
       response: response,

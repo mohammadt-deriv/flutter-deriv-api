@@ -56,7 +56,7 @@ class P2pAdvertiserRelationsResponse
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Updates and returns favourite and blocked advertisers of the current user.
-  Future<P2pAdvertiserRelationsResponse> fetch(
+  static Future<P2pAdvertiserRelationsResponse> fetch(
     P2pAdvertiserRelationsRequest request,
   ) async {
     final P2pAdvertiserRelationsReceive response = await fetchRaw(request);
@@ -66,7 +66,7 @@ class P2pAdvertiserRelationsResponse
   }
 
   /// Updates and returns favourite and blocked advertisers of the current user.
-  Future<P2pAdvertiserRelationsReceive> fetchRaw(
+  static Future<P2pAdvertiserRelationsReceive> fetchRaw(
     P2pAdvertiserRelationsRequest request,
   ) async {
     final P2pAdvertiserRelationsReceive response =

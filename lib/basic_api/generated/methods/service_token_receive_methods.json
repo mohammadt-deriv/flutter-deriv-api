@@ -1,4 +1,4 @@
 {
-  "methods": "",
-  "imports": "import 'package:flutter_deriv_api/helpers/helpers.dart';\n"
+  "methods": "static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;\n\n  /// Fetches service token request.\n  static Future<ServiceTokenResponse> fetch(\n    ServiceTokenRequest request,\n  ) async {\n    final ServiceTokenReceive response = await fetchRaw(request);\n\n    return ServiceTokenResponse.fromJson(response.serviceToken);\n  }\n\n  /// Fetches Service token request.\n  static Future<ServiceTokenReceive> fetchRaw(\n    ServiceTokenRequest request,\n  ) async {\n    final ServiceTokenReceive response = await _api.call(request: request);\n\n    checkException(\n      response: response,\n      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>\n          P2PException(baseExceptionModel: baseExceptionModel),\n    );\n\n    return response;\n  }",
+  "imports": "import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';\nimport 'package:flutter_deriv_api/basic_api/generated/api.dart';\n\nimport 'package:flutter_deriv_api/helpers/helpers.dart';\nimport 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';\nimport 'package:flutter_deriv_api/services/dependency_injector/injector.dart';"
 }

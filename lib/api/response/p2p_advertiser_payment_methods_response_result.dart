@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 
 import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
 import 'package:flutter_deriv_api/api/response/p2p_payment_methods_response_result.dart';
+import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_payment_methods_receive.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_payment_methods_send.dart';
 
@@ -62,19 +63,21 @@ class P2pAdvertiserPaymentMethodsResponse
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Manage or list P2P advertiser payment methods.
-  Future<P2pPaymentMethodsResponse> fetchMethods(
-    P2pPaymentMethodsRequest request,
+  static Future<P2pAdvertiserPaymentMethodsResponse> crud(
+    P2pAdvertiserPaymentMethodsRequest request,
   ) async {
-    final P2pPaymentMethodsReceive response = await fetchMethodsRaw(request);
+    final P2pAdvertiserPaymentMethodsReceive response = await crudRaw(request);
 
-    return P2pPaymentMethodsResponse.fromJson(response.p2pPaymentMethods);
+    return P2pAdvertiserPaymentMethodsResponse.fromJson(
+        response.p2pAdvertiserPaymentMethods);
   }
 
   /// Manage or list P2P advertiser payment methods.
-  Future<P2pPaymentMethodsReceive> fetchMethodsRaw(
-    P2pPaymentMethodsRequest request,
+  static Future<P2pAdvertiserPaymentMethodsReceive> crudRaw(
+    P2pAdvertiserPaymentMethodsRequest request,
   ) async {
-    final P2pPaymentMethodsReceive response = await _api.call(request: request);
+    final P2pAdvertiserPaymentMethodsReceive response =
+        await _api.call(request: request);
 
     checkException(
       response: response,

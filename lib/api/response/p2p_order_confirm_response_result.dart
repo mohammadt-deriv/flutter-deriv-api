@@ -53,7 +53,7 @@ class P2pOrderConfirmResponse extends P2pOrderConfirmResponseModel {
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Cancel a P2P order.
-  Future<P2pOrderConfirmResponse> confirmOrder(
+  static Future<P2pOrderConfirmResponse> confirmOrder(
     P2pOrderConfirmRequest request,
   ) async {
     final P2pOrderConfirmReceive response = await confirmOrderRaw(request);
@@ -62,7 +62,7 @@ class P2pOrderConfirmResponse extends P2pOrderConfirmResponseModel {
   }
 
   /// Cancel a P2P order.
-  Future<P2pOrderConfirmReceive> confirmOrderRaw(
+  static Future<P2pOrderConfirmReceive> confirmOrderRaw(
     P2pOrderConfirmRequest request,
   ) async {
     final P2pOrderConfirmReceive response = await _api.call(request: request);

@@ -1,14 +1,18 @@
 import 'package:flutter_deriv_api/api/api_initializer.dart';
 import 'package:flutter_deriv_api/api/response/p2p_order_cancel_response_result.dart'
     as order_cancel;
+import 'package:flutter_deriv_api/api/response/p2p_order_cancel_response_result.dart';
 import 'package:flutter_deriv_api/api/response/p2p_order_confirm_response_result.dart'
     as order_confirm;
+import 'package:flutter_deriv_api/api/response/p2p_order_confirm_response_result.dart';
 import 'package:flutter_deriv_api/api/response/p2p_order_create_response_result.dart'
     as order_create;
 import 'package:flutter_deriv_api/api/response/p2p_order_info_response_result.dart'
     as order_info;
 import 'package:flutter_deriv_api/api/response/p2p_order_list_response_result.dart'
     as order_list;
+import 'package:flutter_deriv_api/basic_api/generated/p2p_order_cancel_send.dart';
+import 'package:flutter_deriv_api/basic_api/generated/p2p_order_confirm_send.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_create_send.dart';
 import 'package:flutter_deriv_api/basic_api/generated/p2p_order_info_send.dart';
 import 'package:flutter_deriv_api/helpers/helpers.dart';
@@ -136,7 +140,8 @@ void main() {
       );
 
       final order_confirm.P2pOrderConfirmResponse confirmedOrder =
-          await order.confirm();
+          await P2pOrderConfirmResponse.confirmOrder(
+              P2pOrderConfirmRequest(id: order.p2pOrderInfo?.id));
 
       expect(confirmedOrder.p2pOrderConfirm?.status,
           order_confirm.StatusEnum.buyerConfirmed);
@@ -149,7 +154,8 @@ void main() {
       );
 
       final order_cancel.P2pOrderCancelResponse cancelledOrder =
-          await order.cancel();
+          await P2pOrderCancelResponse.cancelOrder(
+              P2pOrderCancelRequest(id: order.p2pOrderInfo?.id));
 
       expect(cancelledOrder.p2pOrderCancel?.status,
           order_cancel.StatusEnum.cancelled);

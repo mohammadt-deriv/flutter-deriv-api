@@ -107,20 +107,22 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   }
 
   /// Subscribes to this order
-  Stream<P2pOrderInfoResponse?> subscribe({
+  static Stream<P2pOrderInfoResponse?> subscribe({
+    required String? orderId,
     RequestCompareFunction? comparePredicate,
   }) =>
       subscribeOrder(
-        P2pOrderInfoRequest(id: p2pOrderInfo?.id),
+        P2pOrderInfoRequest(id: orderId),
         comparePredicate: comparePredicate,
       );
 
   /// Subscribes to this order
-  Stream<P2pOrderInfoReceive?> subscribeRaw({
+  static Stream<P2pOrderInfoReceive?> subscribeRaw({
+    required String? orderId,
     RequestCompareFunction? comparePredicate,
   }) =>
       subscribeOrderRaw(
-        P2pOrderInfoRequest(id: p2pOrderInfo?.id),
+        P2pOrderInfoRequest(id: orderId),
         comparePredicate: comparePredicate,
       );
 
@@ -167,13 +169,9 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   /// Unsubscribes from order subscription.
   ///
   /// Throws a [P2POrderException] if API response contains an error
-  Future<ForgetResponse?> unsubscribeOrder() async {
-    if (subscription == null) {
-      return null;
-    }
-
+  static Future<ForgetResponse?> unsubscribeOrder(String subscriptionId) async {
     final ForgetReceive response =
-        await _api.unsubscribe(subscriptionId: subscription!.id);
+        await _api.unsubscribe(subscriptionId: subscriptionId);
 
     checkException(
       response: response,
@@ -204,8 +202,10 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   ///
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
-  Future<P2pOrderCancelResponse> cancel() async {
-    final P2pOrderCancelReceive response = await cancelRaw();
+  static Future<P2pOrderCancelResponse> cancel({
+    required String? orderId,
+  }) async {
+    final P2pOrderCancelReceive response = await cancelRaw(orderId: orderId);
     return P2pOrderCancelResponse.fromJson(response.p2pOrderCancel);
   }
 
@@ -213,9 +213,11 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   ///
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
-  Future<P2pOrderCancelReceive> cancelRaw() async {
+  static Future<P2pOrderCancelReceive> cancelRaw({
+    required String? orderId,
+  }) async {
     final P2pOrderCancelReceive response =
-        await _api.call(request: P2pOrderCancelRequest(id: p2pOrderInfo?.id));
+        await _api.call(request: P2pOrderCancelRequest(id: orderId));
 
     checkException(
       response: response,
@@ -230,8 +232,10 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   ///
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
-  Future<P2pOrderConfirmResponse> confirm() async {
-    final P2pOrderConfirmReceive response = await confirmRaw();
+  static Future<P2pOrderConfirmResponse> confirm({
+    required String? orderId,
+  }) async {
+    final P2pOrderConfirmReceive response = await confirmRaw(orderId: orderId);
 
     return P2pOrderConfirmResponse.fromJson(response.p2pOrderConfirm);
   }
@@ -240,9 +244,11 @@ class P2pOrderInfoResponse extends P2pOrderInfoResponseModel {
   ///
   /// Returns an order with updated status if successful.
   /// Throws a [P2POrderException] if API response contains an error
-  Future<P2pOrderConfirmReceive> confirmRaw() async {
+  static Future<P2pOrderConfirmReceive> confirmRaw({
+    required String? orderId,
+  }) async {
     final P2pOrderConfirmReceive response =
-        await _api.call(request: P2pOrderConfirmRequest(id: p2pOrderInfo?.id));
+        await _api.call(request: P2pOrderConfirmRequest(id: orderId));
 
     checkException(
       response: response,

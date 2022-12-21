@@ -2,8 +2,12 @@
 
 import 'package:equatable/equatable.dart';
 
-import 'package:flutter_deriv_api/helpers/helpers.dart';
+import 'package:flutter_deriv_api/api/exceptions/exceptions.dart';
+import 'package:flutter_deriv_api/basic_api/generated/api.dart';
 
+import 'package:flutter_deriv_api/helpers/helpers.dart';
+import 'package:flutter_deriv_api/services/connection/api_manager/base_api.dart';
+import 'package:flutter_deriv_api/services/dependency_injector/injector.dart';
 /// Service token response model class.
 abstract class ServiceTokenResponseModel {
   /// Initializes Service token response model class .
@@ -43,6 +47,32 @@ class ServiceTokenResponse extends ServiceTokenResponseModel {
     }
 
     return resultMap;
+  }
+
+  static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
+
+  /// Fetches service token request.
+  static Future<ServiceTokenResponse> fetch(
+    ServiceTokenRequest request,
+  ) async {
+    final ServiceTokenReceive response = await fetchRaw(request);
+
+    return ServiceTokenResponse.fromJson(response.serviceToken);
+  }
+
+  /// Fetches Service token request.
+  static Future<ServiceTokenReceive> fetchRaw(
+    ServiceTokenRequest request,
+  ) async {
+    final ServiceTokenReceive response = await _api.call(request: request);
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          P2PException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.

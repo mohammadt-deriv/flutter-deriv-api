@@ -73,6 +73,26 @@ class ExchangeRatesResponse extends ExchangeRatesResponseModel {
   static Future<ExchangeRates?> fetchExchangeRates(
     ExchangeRatesRequest request,
   ) async {
+    final ExchangeRatesReceive? response = await fetchExchangeRatesRaw(request);
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          ExchangeException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return response?.exchangeRates == null
+        ? null
+        : ExchangeRates.fromJson(response!.exchangeRates!);
+  }
+
+  /// Retrieves the exchange rates from a base currency to all currencies supported by the system.
+  ///
+  /// For parameters information refer to [ExchangeRatesRequest].
+  /// Throws an [ExchangeException] if API response contains an error
+  static Future<ExchangeRatesReceive?> fetchExchangeRatesRaw(
+    ExchangeRatesRequest request,
+  ) async {
     final ExchangeRatesReceive response = await _api.call(request: request);
 
     checkException(
@@ -81,9 +101,7 @@ class ExchangeRatesResponse extends ExchangeRatesResponseModel {
           ExchangeException(baseExceptionModel: baseExceptionModel),
     );
 
-    return response.exchangeRates == null
-        ? null
-        : ExchangeRates.fromJson(response.exchangeRates!);
+    return response;
   }
 
   /// Creates a copy of instance with given parameters.

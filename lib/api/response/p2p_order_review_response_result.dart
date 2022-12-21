@@ -54,7 +54,7 @@ class P2pOrderReviewResponse extends P2pOrderReviewResponseModel {
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Creates a review for the specified order.
-  Future<P2pOrderReviewResponse> reviewOrder(
+  static Future<P2pOrderReviewResponse> reviewOrder(
     P2pOrderReviewRequest request,
   ) async {
     final P2pOrderReviewReceive response = await reviewOrderRaw(request);
@@ -63,7 +63,7 @@ class P2pOrderReviewResponse extends P2pOrderReviewResponseModel {
   }
 
   /// Creates a review for the specified order.
-  Future<P2pOrderReviewReceive> reviewOrderRaw(
+  static Future<P2pOrderReviewReceive> reviewOrderRaw(
     P2pOrderReviewRequest request,
   ) async {
     final P2pOrderReviewReceive response = await _api.call(request: request);

@@ -53,7 +53,7 @@ class P2pOrderCancelResponse extends P2pOrderCancelResponseModel {
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Cancel a P2P order.
-  Future<P2pOrderCancelResponse> cancelOrder(
+  static Future<P2pOrderCancelResponse> cancelOrder(
     P2pOrderCancelRequest request,
   ) async {
     final P2pOrderCancelReceive response = await cancelOrderRaw(request);
@@ -62,7 +62,7 @@ class P2pOrderCancelResponse extends P2pOrderCancelResponseModel {
   }
 
   /// Cancel a P2P order.
-  Future<P2pOrderCancelReceive> cancelOrderRaw(
+  static Future<P2pOrderCancelReceive> cancelOrderRaw(
     P2pOrderCancelRequest request,
   ) async {
     final P2pOrderCancelReceive response = await _api.call(request: request);

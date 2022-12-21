@@ -55,7 +55,7 @@ class P2pOrderDisputeResponse extends P2pOrderDisputeResponseModel {
   static final BaseAPI _api = Injector.getInjector().get<BaseAPI>()!;
 
   /// Dispute a P2P order.
-  Future<P2pOrderDisputeResponse> disputeOrder(
+  static Future<P2pOrderDisputeResponse> disputeOrder(
     P2pOrderDisputeRequest request,
   ) async {
     final P2pOrderDisputeReceive response = await disputeOrderRaw(request);
@@ -64,7 +64,7 @@ class P2pOrderDisputeResponse extends P2pOrderDisputeResponseModel {
   }
 
   /// Dispute a P2P order.
-  Future<P2pOrderDisputeReceive> disputeOrderRaw(
+  static Future<P2pOrderDisputeReceive> disputeOrderRaw(
     P2pOrderDisputeRequest request,
   ) async {
     final P2pOrderDisputeReceive response = await _api.call(request: request);

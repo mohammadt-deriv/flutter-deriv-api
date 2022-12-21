@@ -120,13 +120,31 @@ class WebsiteStatusResponse extends WebsiteStatusResponseModel {
   /// Unsubscribes from website status
   ///
   /// Throws a [WebsiteStatusException] if API response contains an error
-  Future<ForgetResponse?> unsubscribeWebsiteStatus() async {
+  Future<ForgetResponse?> unsubscribeWebsiteStatus(
+      String subscriptionId) async {
     if (subscription == null) {
       return null;
     }
 
     final ForgetReceive response =
         await _api.unsubscribe(subscriptionId: subscription!.id);
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          WebsiteStatusException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return ForgetResponse.fromJson(response.forget);
+  }
+
+  /// Unsubscribes from website status
+  ///
+  /// Throws a [WebsiteStatusException] if API response contains an error
+  static Future<ForgetResponse?> unsubscribeWebsiteStatusRaw(
+      String subscriptionId) async {
+    final ForgetReceive response =
+        await _api.unsubscribe(subscriptionId: subscriptionId);
 
     checkException(
       response: response,

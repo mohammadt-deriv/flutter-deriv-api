@@ -62,15 +62,7 @@ class GetSettingsResponse extends GetSettingsResponseModel {
   static Future<GetSettingsResponse> fetchAccountSetting([
     GetSettingsRequest? request,
   ]) async {
-    final GetSettingsReceive response = await _api.call(
-      request: request ?? const GetSettingsRequest(),
-    );
-
-    checkException(
-      response: response,
-      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
-          AccountSettingsException(baseExceptionModel: baseExceptionModel),
-    );
+    final GetSettingsReceive response = await fetchAccountSettingRaw(request);
 
     return GetSettingsResponse.fromJson(response.getSettings);
   }
@@ -81,6 +73,36 @@ class GetSettingsResponse extends GetSettingsResponseModel {
   static Future<SetSettingsResponse> changeAccountSetting(
     SetSettingsRequest request,
   ) async {
+    final SetSettingsReceive response = await changeAccountSettingRaw(request);
+
+    return SetSettingsResponse(setSettings: response.setSettings ?? 0);
+  }
+
+  /// Gets user's settings (email, date of birth, address etc)
+  ///
+  /// Throws an [AccountSettingsException] if API response contains an error
+  static Future<GetSettingsReceive> fetchAccountSettingRaw([
+    GetSettingsRequest? request,
+  ]) async {
+    final GetSettingsReceive response = await _api.call(
+      request: request ?? const GetSettingsRequest(),
+    );
+
+    checkException(
+      response: response,
+      exceptionCreator: ({BaseExceptionModel? baseExceptionModel}) =>
+          AccountSettingsException(baseExceptionModel: baseExceptionModel),
+    );
+
+    return response;
+  }
+
+  /// Changes the user's settings with parameters specified as [SetSettingsRequest]
+  ///
+  /// Throws an [AccountSettingsException] if API response contains an error
+  static Future<SetSettingsReceive> changeAccountSettingRaw(
+    SetSettingsRequest request,
+  ) async {
     final SetSettingsReceive response = await _api.call(request: request);
 
     checkException(
@@ -89,7 +111,7 @@ class GetSettingsResponse extends GetSettingsResponseModel {
           AccountSettingsException(baseExceptionModel: baseExceptionModel),
     );
 
-    return SetSettingsResponse(setSettings: response.setSettings ?? 0);
+    return response;
   }
 
   /// Changes user's setting
